@@ -76,20 +76,11 @@ $('#submit').click(function() {
       mymap.flyTo([countryLat, countryLng], 6);
       const popup = L.popup()
             .setLatLng([countryLat, countryLng])
-            .setContent(`<div class="country-card">
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         Name:${result['data']['name']}<br>
-                         </div>`)
+            .setContent(`Name:${result['data']['name']}<br>`)
             .openOn(mymap);
       
       // Should I make a function which builds up a template literal to construct the html for the country or just build it up
-      // within the AJAX call? 
+      // within the AJAX call?
 
 
     },
