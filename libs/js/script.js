@@ -1,15 +1,15 @@
 
-let userLocation;
+// let userLocation;
 
-const setUserPosition = (position) => {
-  userLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
-}
+// const setUserPosition = (position) => {
+//   userLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
+// }
 
-function success(position) {
-  setUserPosition(position)
-}
+// function success(position) {
+//   setUserPosition(position)
+// }
 
-navigator.geolocation.getCurrentPosition(success);
+// navigator.geolocation.getCurrentPosition(success);
 
 
 
@@ -46,7 +46,6 @@ $.ajax({
         value: country['properties']['iso_a2'],
         text: `${country['properties']['iso_a2']} - ${country['properties']['name']}`
       }))
-    
     })
 
   },
@@ -56,6 +55,49 @@ $.ajax({
     console.log(jqXHR);
   }
 }); 
+
+// Add borders to relevant country
+$('#submit').click(function() {
+  $.ajax({
+    url: "libs/php/ISOCode.php",
+    type: 'POST',
+    dataType: 'json',
+    success: function(result) {
+  
+      // Find relevant country code which matches user selected country
+      const selectedCountry = result['data'].find(country => {
+        return country['properties']['iso_a2'] === $('#selCountry').val()
+      });
+
+      console.log(selectedCountry['geometry']['coordinates']);
+
+      // const latlngs = selectedCountry['geometry']['coordinates'][0];
+      // const latlngs = [
+      //   [ // first polygon
+      //     [selectedCountry['geometry']['coordinates'][0][0][0],selectedCountry['geometry']['coordinates'][0][0][1],selectedCountry['geometry']['coordinates'][0][0][2]
+      //     ,selectedCountry['geometry']['coordinates'][0][0][3]], // outer ring
+      //     [[37.29, -108.58],[40.71, -108.58],[40.71, -102.50],[37.29, -102.50]] // hole
+      //   ],
+      //   [ // second polygon
+      //     [[41, -111.03],[45, -111.04],[45, -104.05],[41, -104.05]]
+      //   ]
+      // ];
+      const latlngs = selectedCountry['geometry']['coordinates'];
+
+      // trying to pass the coordinates above here as a multiline polygon, but it doesn't seem to be working. 
+      L.polygon(latlngs, {color: 'red'}).addTo(mymap);
+      
+      
+  
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(errorThrown);
+      console.log(jqXHR);
+    }
+  }); 
+})
+
 
 // 
 $('#submit').click(function() {
@@ -78,9 +120,6 @@ $('#submit').click(function() {
             .setLatLng([countryLat, countryLng])
             .setContent(`Name:${result['data']['name']}<br>`)
             .openOn(mymap);
-      
-      // Should I make a function which builds up a template literal to construct the html for the country or just build it up
-      // within the AJAX call?
 
 
     },
@@ -92,4 +131,26 @@ $('#submit').click(function() {
   }); 
 });
 
+// 
+// $('#submit').click(function() {
+ 
+//   $.ajax({
+//     url: "libs/php/countryBorderPolygons.php",
+//     type: 'POST',
+//     dataType: 'json',
+//     data: {
+//       countryCode: $('#selCountry').val()
+//     },
+//     success: function(result) {
+     
+//       console.log(result);
+
+//     },
+//     error: function(jqXHR, textStatus, errorThrown) {
+//       console.log(textStatus);
+//       console.log(errorThrown);
+//       console.log(jqXHR);
+//     }
+//   }); 
+// });
 
