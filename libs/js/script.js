@@ -74,7 +74,6 @@ $('#submit').click(function() {
 
 // 
 $('#submit').click(function() {
- 
   $.ajax({
     url: "libs/php/restCountries.php",
     type: 'POST',
@@ -86,12 +85,23 @@ $('#submit').click(function() {
       // set country's lat and lng
       countryLat = result['data']['latlng'][0];
       countryLng = result['data']['latlng'][1];
+    
+      const countryInfo = `<ul class="country-info">
+                            <li>Name: ${result['data']['name']}</li>
+                            <li>Region: ${result['data']['region']}</li>
+                            <li>Name: ${result['data']['population']}</li>
+                            <li>Capital City: ${result['data']['capital']}</li>
+                            <li>Currency: ${result['data']['currencies'][0]['name']} - ${result['data']['currencies'][0]['code']}</li>
+                            <img class="national-flag" src='${result['data']['flag']}' alt='${result['data']['name']}'s national flag'>
+                          <ul>`
+
+                          // Could I add a function here which makes an AJAX call to geonames for example and adds markers to the country's latlng coords such as wikipedia entries?
       
       // go to relevant lat and lng
-      mymap.flyTo([countryLat, countryLng], 6);
-      const popup = L.popup()
+      mymap.flyTo([countryLat, countryLng], 5);
+      const popup = L.popup({'className': 'custom-popup'})
             .setLatLng([countryLat, countryLng])
-            .setContent(`Name:${result['data']['name']}<br>`)
+            .setContent(countryInfo)
             .openOn(mymap);
 
       // TODO: format all of the info in an attractive way
@@ -102,8 +112,11 @@ $('#submit').click(function() {
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);
-    }
+    },
+    
   }); 
+  
+  
 });
 
 

@@ -1,7 +1,52 @@
+body {
+  font-family: 'Rubik' , sans-serif;
+}
+
 #mapid {
   height: 100vh;
 }
 
-.country-card {
-  font-size: 2em;
+ul {
+  padding: 0;
 }
+
+li {
+  list-style-type: none;
+}
+
+.country-info {
+  padding: .5em;
+}
+
+/* separate the last li from the flag */
+.country-info li:last-of-type {
+  margin-bottom: 1em;
+}
+
+.national-flag {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .custom-popup .leaflet-popup-content-wrapper {
+    background:#5f97cf;
+    color:#fff;
+    font-size:1.7em;
+    line-height:24px;
+    border-radius: 5px;
+    }
+  .custom-popup .leaflet-popup-content-wrapper a {
+      color:rgba(255,255,255,0.1);
+    }
+  .custom-popup .leaflet-popup-tip-container {
+    width:30px;
+    height:15px;
+    }
+  .custom-popup .leaflet-popup-tip {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+}
+
+
