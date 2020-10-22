@@ -43,7 +43,8 @@ $('#submit').click(function() {
     type: 'POST',
     dataType: 'json',
     success: function(result) {
-  
+      console.log(result['data']);
+      
       // Find relevant country code which matches user selected country
       const selectedCountry = result['data'].find(country => {
         return country['properties']['iso_a2'] === $('#selCountry').val()
@@ -56,7 +57,6 @@ $('#submit').click(function() {
 
       // Set border variable to a geoJSON object with relevant country info
       border = L.geoJSON(selectedCountry);
-      console.log(border);
 
       // add the geoJSON object to the map
       border.addTo(mymap);
@@ -82,6 +82,8 @@ $('#submit').click(function() {
       countryCode: $('#selCountry').val()
     },
     success: function(result) {
+      console.log(result['data']);
+
       // set country's lat and lng
       countryLat = result['data']['latlng'][0];
       countryLng = result['data']['latlng'][1];
