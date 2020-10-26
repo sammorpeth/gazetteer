@@ -22,10 +22,44 @@
       <select id=selCountry>
       </select>
       <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-globe" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <circle cx="12" cy="10" r="4" />
+        <path d="M6.75 16a8.015 8.015 0 1 0 9.25 -13" />
+        <line x1="12" y1="18" x2="12" y2="22" />
+        <line x1="8" y1="22" x2="16" y2="22" />
+      </svg>
+      Latitude:<input type="number" id="mouseLat" step="0.0001">
+      Longitude:<input type="number" id="mouseLng" step="0.0001">
+      <button id="weather-sbmt" type="submit" class="btn btn-primary">Weather</button>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cloud" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-12" />
+      </svg>
+      <button id="wiki-sbmt" type="submit" class="btn btn-primary">Wikipedia</button>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+        <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+        <line x1="3" y1="6" x2="3" y2="19" />
+        <line x1="12" y1="6" x2="12" y2="19" />
+        <line x1="21" y1="6" x2="21" y2="19" />
+      </svg>
     </form>
   </nav>
 
-  <div id="mapid"></div>
+  <div id="mapid">
+    <div class="info-box" id="info-box">
+      <p>Enter your desired latitude and longitude in the fields above, 
+        or simply click anywhere on the map to set the coordinates automatically.</p>
+      <ul>
+        <li id="current-lat"></li>
+        <li id="current-lng"></li>
+      </ul>
+  </div>
+  </div>
+  
+  
  
 
   <!-- Bootstrap scripts -->

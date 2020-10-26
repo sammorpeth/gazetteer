@@ -1,9 +1,11 @@
 body {
   font-family: 'Rubik' , sans-serif;
+  overflow: hidden;
+
 }
 
 #mapid {
-  height: 100vh;
+  height: 95vh;
 }
 
 ul {
@@ -12,6 +14,14 @@ ul {
 
 li {
   list-style-type: none;
+}
+
+nav {
+  color: #fff;
+}
+
+h2 {
+  text-decoration: underline;
 }
 
 .country-info {
@@ -25,6 +35,23 @@ li {
 
 .national-flag {
   width: 100%;
+}
+
+.info-box {
+  width: 350px;
+  height: 300px;
+  position: absolute;
+  z-index: 500;
+  left:20px;
+  bottom: 20px;
+  border-radius: 5px;
+  padding: 1em;
+  font-size: 1.5em;
+  color: #000;
+  background-color: #FFC558;
+  -webkit-box-shadow: 2px 5px 16px 0px #0B325E, 5px 5px 2px 5px rgba(229,229,229,0); 
+  box-shadow: 2px 5px 16px 0px #0B325E, 5px 5px 2px 5px rgba(229,229,229,0);
+ 
 }
 
 @media (min-width: 600px) {

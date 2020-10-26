@@ -1,13 +1,4 @@
 <?php
-  header('Content-Type: application/json; charset=UTF-8');
-
-  // // Country Borders JSON
-  // // get relevant JSON data
-  // $jsondata = file_get_contents('../json/countryBorders.geo.json');
-  // // convert the JSON into PHP variable
-  // $decode = json_decode($jsondata, true);
-  
-  // $output['data']['borders'] += $decode['features'];
 
   $executionStartTime = microtime(true) / 1000;
   
@@ -48,6 +39,7 @@
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   $output['data'] = $decode;
 
+  header('Content-Type: application/json; charset=UTF-8');
 	
 	echo json_encode($output); 
 

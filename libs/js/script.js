@@ -10,25 +10,37 @@ var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(mymap);
 
+// Construct HTML and add wikipedia marker to map
 const buildWikiMarker = (selectedCountryWiki) => {
-
   selectedCountryWiki.forEach(country => {
     let markerHTML = `
-      <div class='wiki-popup'>
-      <h5 style='text-decoration: underline'>${country['title']}<h5>
-      <p>${country['summary']}<p>
-      <a href='${country['wikipediaUrl']}'></a>
-      </div>
-      `
+                      <div class='wiki-popup'>
+                      <h5 style='text-decoration: underline'>${country['title']}<h5>
+                      <p>${country['summary']}<p>
+                      <a href='${country['wikipediaUrl']}'></a>
+                      </div>
+                      `
+      // add marker to map at relevant coords
       const marker = L.marker([country['lat'],country['lng']]).addTo(mymap);
       marker.bindPopup(markerHTML);
   });
     
+};
+
+// Construct HTML and add weather marker to map
+const buildWeatherMarker = (weatherData) => {
+  console.log(weatherData);
+  let markerHTML = `
+                   <ul>
+                    <li>${weatherData['stationName']}</li>
+                   </ul>
+                  `
+  // add marker to map at relevant coords
+  const marker = L.marker([weatherData['lat'],weatherData['lng']]).addTo(mymap);
+  marker.bindPopup(markerHTML);
 }
 
-
-// AJAX Calls
-
+//--------- AJAX Calls ---------
 // Get country codes from decoded JSON 
 $.ajax({
   url: "libs/php/ISOCode.php",
@@ -87,9 +99,13 @@ $('#submit').click(function() {
   }); 
 })
 
-$('#weather-sbmt').click(function() {
+// Add wikipedia marker to map and zoom to relevant coords
+$('#wiki-sbmt').click(function() {
+  console.log('hi');
+  console.log($('#mouseLat').val());
+  console.log($('#mouseLng').val());
   $.ajax({
-    url: "libs/php/restCountries.php",
+    url: "libs/php/geonamesWiki.php",
     type: 'POST',
     dataType: 'json',
     data: {
@@ -98,7 +114,48 @@ $('#weather-sbmt').click(function() {
     },
     success: function(result) {
       
-     console.log(result['data']);
+     buildWikiMarker(result['data']);
+     // Fly to relevant coords
+     mymap.flyTo([result['data'][0]['lat'], result['data'][0]['lng']], 10);
+  
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(errorThrown);
+      console.log(jqXHR);
+    }
+  }); 
+})
+
+// Add weather marker to map and zoom to relevant coords
+$('#weather-sbmt').click(function() {
+  console.log('hi');
+  console.log($('#mouseLat').val());
+  console.log($('#mouseLng').val());
+  $.ajax({
+    url: "libs/php/geonamesWeather.php",
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      lat: $('#mouseLat').val(),
+      lng: $('#mouseLng').val(),
+    },
+    success: function(result) {
+      
+     const weatherData = result['data'];
+     buildWeatherMarker(weatherData);
+     const weatherHTML = `
+                          <h2>Weather</h2>
+                          <ul>
+                            <li>Station Name: ${weatherData['stationName']}</li>
+                            <li>Last Report: ${weatherData['datetime']}</li>
+                            <li>Temperature: ${weatherData['stationName']}</li>
+                            <li>Clouds: ${weatherData['clouds']}</li>
+                            <li>Humidity: ${weatherData['humidity']}</li>
+                            <li>Elevation: ${weatherData['elevation']}</li>
+                          </ul>
+     `
+     $('#info-box').html(weatherHTML);
   
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -110,7 +167,7 @@ $('#weather-sbmt').click(function() {
 })
 
 
-// 
+// Get relevant country info, construct marker HTML and add it as a popup
 $('#submit').click(function() {
   $.ajax({
     url: "libs/php/restCountries.php",
@@ -142,14 +199,6 @@ $('#submit').click(function() {
             .setContent(countryInfo)
             .openOn(mymap);
 
- 
-      
-      const selectedCountryWiki = result['data']['geonames']
-      console.log(selectedCountryWiki)
-      buildWikiMarker(selectedCountryWiki);
-
-
-      // TODO: format all of the info in an attractive way
       
 
     },
@@ -160,30 +209,39 @@ $('#submit').click(function() {
     },
     
   }); 
-  
-  
 });
 
+// mymap functions
+// Get coords of where the user clicked
+mymap.on('click', function(e) {
+  let lat = e.latlng.lat;
+  let lng = e.latlng.lng;
 
-  mymap.on('click', function(e) {
-   let lat = e.latlng.lat;
-   let lng = e.latlng.lng;
-  
-   console.log( lat);
-   console.log( lng);
+  // Round to 4 decimal places
+  let roundedLat = lat.toFixed(4);
+  let roundedLng = lng.toFixed(4);
 
-   L.popup({'className': 'custom-popup'})
-            .setLatLng([lat, lng])
-            .setContent(`<ul>
-                         <li id='mouseLat'>Latitude: ${lat}</li><br>
-                         <li id='mouseLng'>Longitude: ${lng}<br></li>
-                         </ul>
-                         <button type='submit' value='weather' id='weather-sbmt'>Weather</button>
-                         <input type='submit' value='wikipedia' id='weather-sbmt'></input>
-            `)
-            .openOn(mymap);
-  
-  })
+  // Set the value of the inputs to the current mouse position coords.
+  $('#mouseLat').val(roundedLat);
+  $('#mouseLng').val(roundedLng);
+
+})
+
+// Get coords of where the mouse is on the map
+mymap.addEventListener('mousemove', function(e) {
+  let lat = e.latlng.lat;
+  let lng = e.latlng.lng;
+
+  // Round to 4 decimal places
+  let roundedLat = lat.toFixed(4);
+  let roundedLng = lng.toFixed(4);
+
+  // Set the current latlng in the info-box
+  $('#current-lat').html(`Cursor latitude: ${roundedLat}`);
+  $('#current-lng').html(`Cursor latitude: ${roundedLng}`);
+})
+
+
 
 
 
