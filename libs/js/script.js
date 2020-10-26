@@ -2,12 +2,29 @@
 // declare map
 const mymap = L.map('mapid').setView([55, 1.5], 6);
 let border;
+let wikiMarker;
 
 // add tile layers
 var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	maxZoom: 19,
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(mymap);
+
+const buildWikiMarker = (selectedCountryWiki) => {
+
+  selectedCountryWiki.forEach(country => {
+    let markerHTML = `
+      <div class='wiki-popup'>
+      <h5 style='text-decoration: underline'>${country['title']}<h5>
+      <p>${country['summary']}<p>
+      <a href='${country['wikipediaUrl']}'></a>
+      </div>
+      `
+      const marker = L.marker([country['lat'],country['lng']]).addTo(mymap);
+      marker.bindPopup(markerHTML);
+  });
+    
+}
 
 
 // AJAX Calls
@@ -43,7 +60,6 @@ $('#submit').click(function() {
     type: 'POST',
     dataType: 'json',
     success: function(result) {
-      console.log(result['data']);
       
       // Find relevant country code which matches user selected country
       const selectedCountry = result['data'].find(country => {
@@ -71,6 +87,28 @@ $('#submit').click(function() {
   }); 
 })
 
+$('#weather-sbmt').click(function() {
+  $.ajax({
+    url: "libs/php/restCountries.php",
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      lat: $('#mouseLat').val(),
+      lng: $('#mouseLng').val(),
+    },
+    success: function(result) {
+      
+     console.log(result['data']);
+  
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(errorThrown);
+      console.log(jqXHR);
+    }
+  }); 
+})
+
 
 // 
 $('#submit').click(function() {
@@ -82,32 +120,37 @@ $('#submit').click(function() {
       countryCode: $('#selCountry').val()
     },
     success: function(result) {
-      console.log(result['data']);
-
+      const selectedCountry = result['data'];
       // set country's lat and lng
-      countryLat = result['data']['latlng'][0];
-      countryLng = result['data']['latlng'][1];
-    
+      countryLat = selectedCountry[0]['latlng'][0];
+      countryLng = selectedCountry[0]['latlng'][1];
+      
       const countryInfo = `<ul class="country-info">
-                            <li>Name: ${result['data']['name']}</li>
-                            <li>Region: ${result['data']['region']}</li>
-                            <li>Name: ${result['data']['population']}</li>
-                            <li>Capital City: ${result['data']['capital']}</li>
-                            <li>Currency: ${result['data']['currencies'][0]['name']} - ${result['data']['currencies'][0]['code']}</li>
-                            <img class="national-flag" src='${result['data']['flag']}' alt='${result['data']['name']}'s national flag'>
+                            <li>Name: ${selectedCountry[0]['name']}</li>
+                            <li>Region: ${selectedCountry[0]['region']}</li>
+                            <li>Name: ${selectedCountry[0]['population']}</li>
+                            <li>Capital City: ${selectedCountry[0]['capital']}</li>
+                            <li>Currency: ${selectedCountry[0]['currencies'][0]['name']} - ${selectedCountry[0]['currencies'][0]['code']}</li>
+                            <img class="national-flag" src='${selectedCountry[0]['flag']}' alt='${selectedCountry[0]['name']}'s national flag'>
                           <ul>`
 
-                          // Could I add a function here which makes an AJAX call to geonames for example and adds markers to the country's latlng coords such as wikipedia entries?
       
       // go to relevant lat and lng
       mymap.flyTo([countryLat, countryLng], 5);
-      const popup = L.popup({'className': 'custom-popup'})
+      L.popup({'className': 'custom-popup'})
             .setLatLng([countryLat, countryLng])
             .setContent(countryInfo)
             .openOn(mymap);
 
-      // TODO: format all of the info in an attractive way
+ 
+      
+      const selectedCountryWiki = result['data']['geonames']
+      console.log(selectedCountryWiki)
+      buildWikiMarker(selectedCountryWiki);
 
+
+      // TODO: format all of the info in an attractive way
+      
 
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -120,6 +163,27 @@ $('#submit').click(function() {
   
   
 });
+
+
+  mymap.on('click', function(e) {
+   let lat = e.latlng.lat;
+   let lng = e.latlng.lng;
+  
+   console.log( lat);
+   console.log( lng);
+
+   L.popup({'className': 'custom-popup'})
+            .setLatLng([lat, lng])
+            .setContent(`<ul>
+                         <li id='mouseLat'>Latitude: ${lat}</li><br>
+                         <li id='mouseLng'>Longitude: ${lng}<br></li>
+                         </ul>
+                         <button type='submit' value='weather' id='weather-sbmt'>Weather</button>
+                         <input type='submit' value='wikipedia' id='weather-sbmt'></input>
+            `)
+            .openOn(mymap);
+  
+  })
 
 
 

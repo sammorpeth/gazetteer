@@ -12,7 +12,9 @@
   $executionStartTime = microtime(true) / 1000;
   
   // Rest Countries - Country Info
-  $infoUrl='https://restcountries.eu/rest/v2/alpha?codes=CH';
+  $infoUrl='https://restcountries.eu/rest/v2/alpha?codes=' . $_REQUEST['countryCode'];
+  // $infoUrl='https://restcountries.eu/rest/v2/alpha?codes=BS';
+  
 
 	$ch1 = curl_init();
 	curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
@@ -21,15 +23,12 @@
 
   $resultCountryInfo = curl_exec($ch1);
   $decode = json_decode($resultCountryInfo,true);
-  // var_dump($decode[0]["latlng"][0]);
-
   
 
   curl_close($ch1);
-  // $output['data'][0]['latlng'][0]
 
   // Geonames - Nearby Wikipedia
-  $wikiUrl='http://api.geonames.org/findNearbyWikipediaJSON?lat='. $decode[0]["latlng"][0] .'&lng=' .  $decode[0]["latlng"][1]. '&username=sammorpeth';
+  $wikiUrl='http://api.geonames.org/findNearbyWikipediaJSON?lat='. $decode[0]["latlng"][0]  .'&lng=' .  $decode[0]["latlng"][1] . '&username=sammorpeth';
 
 	$ch2 = curl_init();
 	curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
