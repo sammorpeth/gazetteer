@@ -13,54 +13,89 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-dark ">
     <a class="navbar-brand" href="#">Gazetteer</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
-    <form>
-      <select id=selCountry>
-      </select>
-      <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-globe" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <circle cx="12" cy="10" r="4" />
-        <path d="M6.75 16a8.015 8.015 0 1 0 9.25 -13" />
-        <line x1="12" y1="18" x2="12" y2="22" />
-        <line x1="8" y1="22" x2="16" y2="22" />
-      </svg>
-      Latitude:<input type="number" id="mouseLat" step="0.0001">
-      Longitude:<input type="number" id="mouseLng" step="0.0001">
-      <button id="weather-sbmt" type="submit" class="btn btn-primary">Weather</button>
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cloud" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-12" />
-      </svg>
-      <button id="wiki-sbmt" type="submit" class="btn btn-primary">Wikipedia</button>
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-        <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-        <line x1="3" y1="6" x2="3" y2="19" />
-        <line x1="12" y1="6" x2="12" y2="19" />
-        <line x1="21" y1="6" x2="21" y2="19" />
-      </svg>
+    </button> -->
+    <div>
+      <form>
+        <div id="country-submit-container">
+          <select id=selCountry>
+          </select>
+          <button id="submit" type="submit" class="btn">Submit</button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-globe" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <circle cx="12" cy="10" r="4" />
+            <path d="M6.75 16a8.015 8.015 0 1 0 9.25 -13" />
+            <line x1="12" y1="18" x2="12" y2="22" />
+            <line x1="8" y1="22" x2="16" y2="22" />
+          </svg>
+        </div>
+    </div>
+    <div id="lat-lng-container">
+      Latitude: <input type="number" id="mouseLat" step="0.0001">
+      Longitude: <input type="number" id="mouseLng" step="0.0001">
+    </div>
+      <div id="api-btn-container">
+        <div>
+          <button id="weather-sbmt" type="submit" class="btn" data-toggle="collapse" data-target="#weather-box">Weather</button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cloud" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-12" />
+          </svg>
+        </div>
+        <div>
+          <button id="wiki-sbmt" type="submit" class="btn">Wikipedia</button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <line x1="3" y1="6" x2="3" y2="19" />
+            <line x1="12" y1="6" x2="12" y2="19" />
+            <line x1="21" y1="6" x2="21" y2="19" />
+          </svg>
+        </div>
+      </div>
+    </div>
     </form>
   </nav>
 
   <div id="mapid">
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      Button with data-target
+    <div class="button-nav">
+      <button id="info-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+        Instructions
+      </button>
+      <button id="weather-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#weather-box" aria-expanded="false" aria-controls="weather-box">
+        Weather
+      </button>
+      <button id="country-box-btn" class="btn btn-primary" type="button" aria-expanded="false" aria-controls="country-box" data-toggle="collapse" data-target="#country-box">
+        Country
+      </button>
+    </div>
+    <div class="info-container">
+      <div class="info-box" id="info-box">
+        <p>Enter your desired latitude and longitude in the fields above, 
+          or simply click anywhere on the map to set the coordinates automatically.</p>
+         
+        <ul>
+          <li id="current-lat"></li>
+          <li id="current-lng"></li>
+        </ul>
+        <button id="info-box-btn" class="btn btn-primary minimize-mobile" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+          Minimize
+        </button>
+      </div>
+      <div class="weather-box collapse" id="weather-box"></div>
+    </div>
+    <button id="info-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+      Instructions
     </button>
-    <div class="info-box" id="info-box">
-      
-      <p>Enter your desired latitude and longitude in the fields above, 
-        or simply click anywhere on the map to set the coordinates automatically.</p>
-      <ul>
-        <li id="current-lat"></li>
-        <li id="current-lng"></li>
-      </ul>
-  </div>
+    <div class="country-box-container">
+      <div class="country-box" id="country-box" >
+        <p>Select a country from the drop down menu above and click submit to see some information about your chosen country!</p>
+      </div>
+    </div>  
   </div>
   
   

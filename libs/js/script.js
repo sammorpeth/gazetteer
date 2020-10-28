@@ -1,8 +1,19 @@
+const mymap = L.map('mapid').setView([0, 0], 6);
+
+$(document).ready(function() {
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      userPosLat = position.coords.latitude;
+      userPosLng = position.coords.longitude;
+      mymap.setView([userPosLat, userPosLng]);
+    })
+  }
+})
 
 // declare map
-const mymap = L.map('mapid').setView([55, 1.5], 6);
 let border;
-let wikiMarker;
+let countryMarker;
 
 // add tile layers
 var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -10,15 +21,19 @@ var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(mymap);
 
+// Remove default shadows for leaflet markers. 
+L.Icon.Default.prototype.options.shadowSize = [0, 0];
+
 // Construct HTML and add wikipedia marker to map
 const buildWikiMarker = (selectedCountryWiki) => {
   selectedCountryWiki.forEach(country => {
+    console.log(country['wikipediaUrl']);
     let markerHTML = `
-                      <div class='wiki-popup'>
-                      <h5 style='text-decoration: underline'>${country['title']}<h5>
+                      
+                      <h5>${country['title']}</h5>
                       <p>${country['summary']}<p>
-                      <a href='${country['wikipediaUrl']}'></a>
-                      </div>
+                      <a href='${country['wikipediaUrl']}'>Read more...</a>
+                      
                       `
       // add marker to map at relevant coords
       const marker = L.marker([country['lat'],country['lng']]).addTo(mymap);
@@ -31,13 +46,25 @@ const buildWikiMarker = (selectedCountryWiki) => {
 const buildWeatherMarker = (weatherData) => {
   console.log(weatherData);
   let markerHTML = `
-                   <ul>
-                    <li>${weatherData['stationName']}</li>
-                   </ul>
+                      <h2>Weather</h2>
+                      <ul>
+                        <li>Station Name: ${weatherData['stationName']}</li>
+                        <li>Last Report: ${weatherData['datetime']}</li>
+                        <li>Temperature: ${weatherData['temperature']}</li>
+                        <li>Clouds: ${weatherData['clouds']}</li>
+                        <li>Humidity: ${weatherData['humidity']}</li>
+                        <li>Elevation: ${weatherData['elevation']}</li>
+                      </ul>
                   `
   // add marker to map at relevant coords
-  const marker = L.marker([weatherData['lat'],weatherData['lng']]).addTo(mymap);
-  marker.bindPopup(markerHTML);
+  const marker = L.marker([weatherData['lat'],weatherData['lng']]);
+  const customPopup = L.popup();
+  customPopup.setLatLng([weatherData['lat'],weatherData['lng']])
+         .setContent(markerHTML)
+         .openOn(mymap);
+  
+ marker.bindPopup(customPopup, {'className' : 'weather-marker'}).addTo(mymap);
+
 }
 
 //--------- AJAX Calls ---------
@@ -88,8 +115,7 @@ $('#submit').click(function() {
 
       // add the geoJSON object to the map
       border.addTo(mymap);
-
-  
+      
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log(textStatus);
@@ -143,19 +169,25 @@ $('#weather-sbmt').click(function() {
     success: function(result) {
       
      const weatherData = result['data'];
+     const weatherDataLat = result['data']['lat'];
+     const weatherDataLng = result['data']['lng'];
+
+     mymap.flyTo([weatherDataLat, weatherDataLng], 10);
+
+     console.log(weatherData);
      buildWeatherMarker(weatherData);
      const weatherHTML = `
                           <h2>Weather</h2>
                           <ul>
                             <li>Station Name: ${weatherData['stationName']}</li>
                             <li>Last Report: ${weatherData['datetime']}</li>
-                            <li>Temperature: ${weatherData['stationName']}</li>
+                            <li>Temperature: ${weatherData['temperature']}</li>
                             <li>Clouds: ${weatherData['clouds']}</li>
                             <li>Humidity: ${weatherData['humidity']}</li>
                             <li>Elevation: ${weatherData['elevation']}</li>
                           </ul>
      `
-     $('#info-box').html(weatherHTML);
+     $('#weather-box').html(weatherHTML);
   
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -177,27 +209,39 @@ $('#submit').click(function() {
       countryCode: $('#selCountry').val()
     },
     success: function(result) {
+
+      
       const selectedCountry = result['data'];
       // set country's lat and lng
       countryLat = selectedCountry[0]['latlng'][0];
       countryLng = selectedCountry[0]['latlng'][1];
       
-      const countryInfo = `<ul class="country-info">
-                            <li>Name: ${selectedCountry[0]['name']}</li>
-                            <li>Region: ${selectedCountry[0]['region']}</li>
-                            <li>Name: ${selectedCountry[0]['population']}</li>
-                            <li>Capital City: ${selectedCountry[0]['capital']}</li>
-                            <li>Currency: ${selectedCountry[0]['currencies'][0]['name']} - ${selectedCountry[0]['currencies'][0]['code']}</li>
-                            <img class="national-flag" src='${selectedCountry[0]['flag']}' alt='${selectedCountry[0]['name']}'s national flag'>
-                          <ul>`
+      const countryInfo = `<h2>${selectedCountry[0]['name']}</h2>
+                            <ul class="country-info">
+                              <li>Region: ${selectedCountry[0]['region']}</li>
+                              <li>Subregion: ${selectedCountry[0]['subregion']}</li>
+                              <li>Population: ${selectedCountry[0]['population']}</li>
+                              <li>Capital City: ${selectedCountry[0]['capital']}</li>
+                              <li>Currency: ${selectedCountry[0]['currencies'][0]['name']} - ${selectedCountry[0]['currencies'][0]['code']}</li>
+                              <img class="national-flag" src='${selectedCountry[0]['flag']}' alt='${selectedCountry[0]['name']}'s national flag'>
+                            <ul>`
 
+      $('#country-box').html(countryInfo);
       
       // go to relevant lat and lng
-      mymap.flyTo([countryLat, countryLng], 5);
-      L.popup({'className': 'custom-popup'})
-            .setLatLng([countryLat, countryLng])
-            .setContent(countryInfo)
-            .openOn(mymap);
+      mymap.flyTo([countryLat, countryLng], 4);
+
+      if(mymap.hasLayer(countryMarker)) {
+        mymap.removeLayer(countryMarker);
+      };
+    
+
+      countryMarker = L.marker([countryLat,countryLng],)
+                                .addTo(mymap);
+      
+
+      L.DomUtil.addClass(countryMarker._icon, 'country-marker');
+      countryMarker.bindPopup(countryInfo);
 
       
 
