@@ -1,7 +1,11 @@
+let border;
+let countryMarker;
+
+// declare map
 const mymap = L.map('mapid').setView([0, 0], 6);
 
+// When doc has loaded set the view to the user's geolocation
 $(document).ready(function() {
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       userPosLat = position.coords.latitude;
@@ -9,11 +13,9 @@ $(document).ready(function() {
       mymap.setView([userPosLat, userPosLng]);
     })
   }
+  
 })
 
-// declare map
-let border;
-let countryMarker;
 
 // add tile layers
 var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -27,12 +29,11 @@ L.Icon.Default.prototype.options.shadowSize = [0, 0];
 // Construct HTML and add wikipedia marker to map
 const buildWikiMarker = (selectedCountryWiki) => {
   selectedCountryWiki.forEach(country => {
-    console.log(country['wikipediaUrl']);
     let markerHTML = `
                       
                       <h5>${country['title']}</h5>
                       <p>${country['summary']}<p>
-                      <a href='${country['wikipediaUrl']}'>Read more...</a>
+                      <a href='https://${country['wikipediaUrl']}'>Read more...</a>
                       
                       `
       // add marker to map at relevant coords
@@ -67,6 +68,18 @@ const buildWeatherMarker = (weatherData) => {
 
 }
 
+// Make an alert box appear, then disappear and inform the user of possible issues.
+const errorAlert = () => {
+
+ $('.alert-box').removeClass('hidden');
+
+ setTimeout(function() {
+  $('.alert-box').addClass('hidden');
+}, 6000);
+  
+
+}
+
 //--------- AJAX Calls ---------
 // Get country codes from decoded JSON 
 $.ajax({
@@ -86,6 +99,7 @@ $.ajax({
 
   },
   error: function(jqXHR, textStatus, errorThrown) {
+    errorAlert();
     console.log(textStatus);
     console.log(errorThrown);
     console.log(jqXHR);
@@ -118,6 +132,7 @@ $('#submit').click(function() {
       
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      errorAlert();
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);
@@ -141,11 +156,17 @@ $('#wiki-sbmt').click(function() {
     success: function(result) {
       
      buildWikiMarker(result['data']);
+
+     // Check if there's any data returned. If not then alert the user.
+     if(result['data'].length < 1) {
+      errorAlert();
+     }
      // Fly to relevant coords
      mymap.flyTo([result['data'][0]['lat'], result['data'][0]['lng']], 10);
   
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      errorAlert();
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);
@@ -191,6 +212,7 @@ $('#weather-sbmt').click(function() {
   
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      errorAlert();
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);
@@ -247,6 +269,7 @@ $('#submit').click(function() {
 
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      errorAlert();
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);

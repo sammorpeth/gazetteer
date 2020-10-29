@@ -63,13 +63,13 @@
 
   <div id="mapid">
     <div class="button-nav">
-      <button id="info-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+      <button id="info-box-btn" class="btn" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
         Instructions
       </button>
-      <button id="weather-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#weather-box" aria-expanded="false" aria-controls="weather-box">
+      <button id="weather-box-btn" class="btn " type="button" data-toggle="collapse" data-target="#weather-box" aria-expanded="false" aria-controls="weather-box">
         Weather
       </button>
-      <button id="country-box-btn" class="btn btn-primary" type="button" aria-expanded="false" aria-controls="country-box" data-toggle="collapse" data-target="#country-box">
+      <button id="country-box-btn" class="btn" type="button" aria-expanded="false" aria-controls="country-box" data-toggle="collapse" data-target="#country-box">
         Country
       </button>
     </div>
@@ -82,13 +82,13 @@
           <li id="current-lat"></li>
           <li id="current-lng"></li>
         </ul>
-        <button id="info-box-btn" class="btn btn-primary minimize-mobile" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+        <button id="minimize-mobile-btn" class="btn" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
           Minimize
         </button>
       </div>
       <div class="weather-box collapse" id="weather-box"></div>
     </div>
-    <button id="info-box-btn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
+    <button id="info-box-btn" class="btn" type="button" data-toggle="collapse" data-target="#info-box" aria-expanded="false" aria-controls="info-box">
       Instructions
     </button>
     <div class="country-box-container">
@@ -96,6 +96,9 @@
         <p>Select a country from the drop down menu above and click submit to see some information about your chosen country!</p>
       </div>
     </div>  
+    <div class="alert-box hidden">
+      <p>There seems to be an error. Maybe there aren't any weather stations/wikipedia articles near your selected coordinates.</p>
+    </div>
   </div>
   
   

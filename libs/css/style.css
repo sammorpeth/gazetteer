@@ -1,10 +1,11 @@
+/* ===============================
+   ======== ELEMENTS ============= 
+   =============================== */
+
 body {
   font-family: 'Rubik' , sans-serif;
   overflow: hidden;
-}
-
-#mapid {
-  height: 95vh;
+  color: #fff;
 }
 
 ul {
@@ -15,10 +16,6 @@ li {
   list-style-type: none;
 }
 
-nav {
-  color: #fff;
-}
-
 h2,
 h5 {
   text-decoration: underline;
@@ -27,6 +24,23 @@ h5 {
 button {
   background-color: #00866B;
   color: #fff;
+}
+
+a {
+  color: #fff;
+}
+
+a:visited {
+  color: rgb(231, 227, 227);
+}
+
+button:hover {
+  background-color: #03af8d;
+}
+
+
+#mapid {
+  height: 95vh;
 }
 
 .navbar {
@@ -57,15 +71,8 @@ button {
   box-shadow: 2px 5px 16px 0px #0B325E, 5px 5px 2px 5px rgba(229,229,229,0);
 }
 
-.collapse-btn {
-  background-color: inherit;
-  color: #000;
-  border-radius: 5px;
-}
-
-.collapse-btn:hover {
-  cursor: pointer;
-  color: inherit;
+#minimize-mobile-btn {
+  display: none;
 }
 
 .button-nav {
@@ -138,21 +145,45 @@ button {
   line-height:24px;
   border-radius: 5px;
   z-index: 1000;
-  }
- .leaflet-popup-content-wrapper a {
-    color:rgba(255,255,255,0.1);
-  }
+}
 
- .leaflet-popup-tip-container {
+.leaflet-popup-content-wrapper a {
+  color:rgba(255,255,255,0.1);
+}
+
+.leaflet-popup-tip-container {
   width: 30px;
   height: 15px;
-  }
+}
 
- .leaflet-popup-tip {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-  }
+.leaflet-popup-tip {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.leaflet-container a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+
+
+.alert-box {
+  display: flex;
+  width: 50%;
+  z-index: 1000;
+  background-color: red;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 5px;
+  font-size: 1.5em;
+  padding: 1em;
+}
+
+.hidden {
+  display: none;
+}
 
 @media (min-width: 426px) {
   .country-marker {
@@ -207,7 +238,7 @@ button {
   .info-container {
     display: flex;
     width: 80%;
-    bottom: 40px;
+    bottom: 60px;
     justify-content: center;
   }
 
@@ -227,7 +258,11 @@ button {
     display: none;
   }
 
-
+  #minimize-mobile-btn {
+    display: block;
+    background-color: #381A72;
+    color: #fff;
+  }
 
   
 }
